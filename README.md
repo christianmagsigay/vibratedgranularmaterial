@@ -64,6 +64,4 @@ Bifurcation diagrams obtained from the dimensionless flight time T versus the di
 
 ## 🎥 Simulation Video
 
-## 🎥 Simulation Video
-
-[![Watch on YouTube](https://img.youtube.com/vi/1-3ROftmYsc&t=2s/0.jpg)](https://www.youtube.com/watch?v=1-3ROftmYsc&t=2s)
+[![Granular DEM Simulation](https://img.youtube.com/vi/1-3ROftmYsc/0.jpg)](https://www.youtube.com/watch?v=1-3ROftmYsc)
