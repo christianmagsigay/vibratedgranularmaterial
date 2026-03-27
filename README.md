@@ -56,8 +56,12 @@ orange dots are the points in time when collisions occurred, while the blue squa
 
 ---
 
-### Acceleration and Collision Detection
+### Bifurcation of flight times
 ![Acceleration](sample_plot2.png)
 
 Bifurcation diagrams obtained from the dimensionless flight time T versus the dimensionless acceleration Γ for particle diameters d =[0.006, 0.008, 0.010, 0.012]
 (a) zoomed-in at the critical accelerations and (b) a larger scale focusing on the first bifurcation. The theoretical bifurcation diagrams for various Tr are also plotted for comparison. Vertical dashed lines indicate the bifurcation point location on the Γ-axis.
+
+## 🎥 Simulation Video
+
+[![Watch on YouTube](https://www.youtube.com/watch?v=1-3ROftmYsc&t=2s)
