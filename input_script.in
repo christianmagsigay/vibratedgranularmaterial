@@ -1,0 +1,143 @@
+# This program simulates the motion of monodisperse particles being
+# vertically vibrated inside a cylindrical container
+# which is imported into LIGGGHTS as an STL file. The data on the 
+# kinematics of the center of mass is written into a log file
+
+# Credits to J. Velez for the earlier version of this code
+
+### Initialization
+
+# Preliminaries
+units           si
+atom_style      sphere
+boundary        f f f
+newton          off
+echo            both
+communicate     single vel yes
+processors      * * *
+
+# Declare domain
+region          reg block -0.078 0.078 -0.078 0.078 -0.03 0.64 units box
+create_box      2 reg
+neighbor        0.01 bin
+neigh_modify    delay 0
+
+
+
+### Setup
+
+# Material and interaction properties
+fix m1 all property/global youngsModulus peratomtype 2.5e7 2.5e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25
+fix m3 all property/global coefficientRestitution peratomtypepair 2 
+                0.5 0.5 0.5 0.5
+fix m4 all property/global coefficientFriction peratomtypepair 2 
+                0.5 0.0 0.0 0.0  
+fix m5 all property/global coefficientRollingFriction peratomtypepair 2 
+                0.1 0.0 0.0 0.0
+
+# Particle insertion
+fix pts1 all particletemplate/sphere 118493 atom_type 1 density constant 
+                1000 radius constant 0.005
+fix pdd all particledistribution/discrete 706019 1 pts1 1
+fix ins_mesh all mesh/surface file factory.stl type 1 scale 0.001
+fix ins all insert/stream seed 544399 distributiontemplate pdd mass               
+                0.2796017461694916  massrate 0.2796017461694916 overlapcheck 
+                yes & vel constant 0. 0. -0.5 insertion_face ins_mesh 
+                extrude_length 0.03
+
+# Import mesh from cad:
+fix             cad1 all mesh/surface file trashcan.stl type 2 scale 0.001 
+                curvature 1e-5
+
+# Use the imported mesh as granular wall
+fix             geometry all wall/gran model hertz tangential history 
+                rolling_friction cdt mesh n_meshes 1 meshes cad1
+
+# Define the physics
+pair_style      gran model hertz tangential history rolling_friction cdt
+pair_coeff      * *
+
+### Detailed settings
+
+# Integrator
+fix             1 all nve/sphere
+
+# Gravity
+fix             grav all gravity 9.81 vector 0.0 0.0 -1.0
+
+# Timestep
+timestep        0.00000625
+
+# File Output
+dump		dmp all custom/vtk 6400 post/dump_*.vtk id type type x y z ix iy iz         	        vx vy 
+            vz fx fy fz omegax omegay omegaz radius
+dump		dmpcad1 all mesh/stl 6400 post/can_*.stl cad1
+
+### Execution and further settings
+
+# Insert particles
+run             160000 upto # 1 sec
+
+# Stop particle generation
+unfix           ins
+unfix           ins_mesh
+
+# Define variables which tracks center of mass dynamics 
+# of many particle system
+variable        zpos equal xcm(all,z)
+variable        zfrc equal fcm(all,z)
+variable        zvel equal vcm(all,z)
+
+# Thermodynamic output settings 
+thermo_style    custom step v_zpos v_zfrc v_zvel
+thermo          16000 #show data every 0.1 sec
+thermo_modify   lost ignore norm no
+
+# Allow particles to settle
+run             480000 upto # 2 secs
+
+# Update thermodynamic output
+thermo_style    custom step v_zpos v_zfrc v_zvel
+thermo          8 #show data every 0.00005 sec
+
+# Oscillate mesh
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00250975104911662 period 0.1 #gam =  1.01                   
+run             800000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00251472085317427 period 0.1 #gam =  1.012                   
+run             1120000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00251969065723193 period 0.1 #gam =  1.014                   
+run             1440000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00252466046128959 period 0.1 #gam =  1.016                   
+run             1760000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00252963026534724 period 0.1 #gam =  1.018                   
+run             2080000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.0025346000694049 period 0.1 #gam =  1.02                   
+run             2400000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00253956987346256 period 0.1 #gam =  1.022                   
+run             2720000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00254453967752021 period 0.1 #gam =  1.024                   
+run             3040000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00254950948157787 period 0.1 #gam =  1.026                   
+run             3360000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00255447928563553 period 0.1 #gam =  1.028                   
+run             3680000  upto # run 2 secs
+fix             movecad1 all move/mesh mesh cad1 wiggle amplitude 
+                0 0 0.00255944908969318 period 0.1 #gam =  1.03                   
+run             4000000  upto # run 2 secs
+
+# Stop shaking
+unfix           movecad1
+
+# Allow particles to settle
+run             4320000.0 upto # run 2 secs
