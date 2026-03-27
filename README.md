@@ -41,3 +41,7 @@ python analysis.py
 * STL files define the container geometry
 * Log files are parsed and converted into CSV for analysis
 * Flight times are computed using peak detection and thresholding
+
+## 🎥 Simulation Preview
+
+https://github.com/YOUR_USERNAME/liggghts-dem-simulation/blob/main/media/simulation.mp4
