@@ -18,7 +18,7 @@ The study focuses on:
 
 ## Requirements
 
-* LIGGGHTS
+* LIGGGHTS (Ubuntu/Linux)
 * Python 3
 * NumPy, Pandas, Matplotlib
 
@@ -41,7 +41,3 @@ python analysis.py
 * STL files define the container geometry
 * Log files are parsed and converted into CSV for analysis
 * Flight times are computed using peak detection and thresholding
-
-## Credits
-
-Based on earlier work by J. Velez
